@@ -61,12 +61,12 @@ Seção 6 de `01-domain-model.md` passando.
 
 ## Fase 3 — Provider Adapters (Design 03)
 
-- [ ] `ProviderClientInterface`
-- [ ] `FixtureProviderAClient` + `ProviderAJsonAdapter` —
+- [x] `ProviderClientInterface`
+- [x] `FixtureProviderAClient` + `ProviderAJsonAdapter` —
       `UT-ADAPTERA-01/02/03`
-- [ ] `FixtureProviderBClient` + `ProviderBXmlAdapter` —
+- [x] `FixtureProviderBClient` + `ProviderBXmlAdapter` —
       `UT-ADAPTERB-01/02/03`
-- [ ] Equivalência A vs B — `UT-NORM-01`
+- [x] Equivalência A vs B — `UT-NORM-01`
 
 **Checkpoint:** `php artisan test --filter=Provider`.
 
