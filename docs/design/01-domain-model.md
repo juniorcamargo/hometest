@@ -501,17 +501,23 @@ final class MultaJurosStrategy implements JurosStrategyInterface
 
 ## 6. Casos de Teste (Pest) — Mapeamento
 
-| ID | Descrição | Entrada | Esperado | Requisito |
-|---|---|---|---|---|
-| UT-PLACA-01 | Placa formato antigo válida | `ABC1234` | `Placa::fromString` retorna sem erro | REQ-INPUT-02 |
-| UT-PLACA-02 | Placa formato Mercosul válida | `ABC1D23` | idem | REQ-INPUT-02 |
-| UT-PLACA-03 | Placa inválida | `AB123` | `InvalidPlateException` | REQ-INPUT-02, CB-05 |
-| UT-IPVA-01 | IPVA com teto aplicado | `1500.00`, venc. `2024-01-10`, ref. `2024-05-10` | `dias_atraso=121`, `juros=300.00`, `valor_atualizado=1800.00` | REQ-JUROS-03 |
-| UT-MULTA-01 | MULTA sem teto | `300.50`, venc. `2024-02-15`, ref. `2024-05-10` | `dias_atraso=85`, `juros=255.43`, `valor_atualizado=555.93` | REQ-JUROS-04 |
-| UT-EDGE-01 | Débito não vencido | `dias_atraso <= 0` (qualquer tipo) | `juros=0.00`, `valor_atualizado=valor_original` | REQ-JUROS-02, CB-04 |
-| UT-RESOLVER-01 | Tipo desconhecido | `tipo="LICENCIAMENTO"` | `UnknownDebtTypeException` com `tipo="LICENCIAMENTO"` | REQ-JUROS-06, CB-03 |
-| UT-RESOLVER-02 | Extensibilidade (OCP) | Strategy fake adicional registrada | Resolver encontra sem editar Resolver/Strategies existentes | REQ-JUROS-07 |
-| UT-RESULTADO-01 | Zero débitos | `[]` | `total_original="0.00"`, `total_atualizado="0.00"` | REQ-PROV-04, CB-01 (req. §6.3) |
+| ID | Descrição | Entrada | Esperado | Requisito | Arquivo |
+|---|---|---|---|---|---|
+| UT-PLACA-01 | Placa formato antigo válida | `ABC1234` | `Placa::fromString` retorna sem erro | REQ-INPUT-02 | `PlacaTest.php` |
+| UT-PLACA-02 | Placa formato Mercosul válida | `ABC1D23` | idem | REQ-INPUT-02 | `PlacaTest.php` |
+| UT-PLACA-03 | Placa inválida | `AB123` | `InvalidPlateException` | REQ-INPUT-02, CB-05 | `PlacaTest.php` |
+| UT-IPVA-01 | IPVA com teto aplicado | `1500.00`, venc. `2024-01-10`, ref. `2024-05-10` | `dias_atraso=121`, `juros=300.00`, `valor_atualizado=1800.00` | REQ-JUROS-03 | `IpvaJurosStrategyTest.php` |
+| UT-MULTA-01 | MULTA sem teto | `300.50`, venc. `2024-02-15`, ref. `2024-05-10` | `dias_atraso=85`, `juros=255.43`, `valor_atualizado=555.93` | REQ-JUROS-04 | `MultaJurosStrategyTest.php` |
+| UT-EDGE-01 | Débito não vencido | `dias_atraso <= 0` | `juros=0.00`, `valor_atualizado=valor_original` | REQ-JUROS-02, CB-04 | dentro de cada `*JurosStrategyTest.php` |
+| UT-RESOLVER-01 | Tipo desconhecido | `tipo="LICENCIAMENTO"` | `UnknownDebtTypeException` com `tipo="LICENCIAMENTO"` | REQ-JUROS-06, CB-03 | `JurosStrategyResolverTest.php` |
+| UT-RESOLVER-02 | Extensibilidade (OCP) | Strategy fake adicional registrada | Resolver encontra sem editar Resolver/Strategies existentes | REQ-JUROS-07 | `JurosStrategyResolverTest.php` |
+| UT-RESULTADO-01 | Zero débitos | `[]` | `total_original="0.00"`, `total_atualizado="0.00"` | REQ-PROV-04, CB-01 (req. §6.3) | `ResultadoConsultaTest.php` |
+
+> **Regra de organização dos testes:** um ID de caso de teste não implica um
+> arquivo separado. Casos de borda de uma Strategy (ex: `UT-EDGE-01`) vivem
+> dentro do arquivo de teste da própria Strategy, não em arquivos `*Edge*` ou
+> `*Border*` isolados. Criar um arquivo de teste separado só se justifica quando
+> o comportamento testado pertence a uma classe própria.
 
 ## 7. Critérios de Aceite
 
@@ -522,8 +528,9 @@ final class MultaJurosStrategy implements JurosStrategyInterface
 - [ ] `JurosStrategyResolver` não contém `match`/`switch` por tipo de
       débito — apenas itera `suporta()`.
 - [ ] `ResultadoConsulta::montar([])` retorna totais `"0.00"` (cobre CB-01).
-- [ ] Todos os 9 casos da Seção 6 implementados como testes Pest, em
-      `tests/Unit/Domain/`.
+- [ ] Os 9 casos da Seção 6 implementados nos arquivos mapeados pela coluna
+      "Arquivo" da tabela acima — um arquivo por classe testada, sem arquivos
+      temáticos (`*EdgeTest`, `*BorderTest`, etc.).
 
 ## 8. Fora de Escopo
 
