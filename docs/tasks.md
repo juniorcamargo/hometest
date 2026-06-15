@@ -11,14 +11,15 @@ de erro). Fases 5–7 cobrem os itens "seria bacana" (P2). Fase 8 é entrega.
 
 ## Fase 0 — Setup do Projeto
 
-- [ ] `composer create-project laravel/laravel:^12.0 .`
-- [ ] `composer require brick/math`
-- [ ] `composer require laravel/boost --dev && php artisan boost:install`
-      (selecionar Claude Code; confirma instalação do skill `pest-testing`)
-- [ ] Criar estrutura de pastas conforme `00-architecture.md` §3
+- [x] `composer create-project laravel/laravel:^12.0 .`
+- [x] `composer require brick/math` (já incluso no lock do Laravel 12)
+- [x] `composer require laravel/boost --dev && php artisan boost:install`
+      (pacote inexistente — substituído por: `pestphp/pest` + `pest-plugin-laravel`
+      instalados manualmente; `CLAUDE.md` criado manualmente)
+- [x] Criar estrutura de pastas conforme `00-architecture.md` §3
       (`Domain/`, `Application/`, `Integrations/`, `Http/`)
-- [ ] Copiar `docs/requirements.md` e `docs/design/*.md` para o repositório
-- [ ] Referenciar os docs no `CLAUDE.md` gerado pelo Boost
+- [x] Copiar `docs/requirements.md` e `docs/design/*.md` para o repositório
+- [x] Referenciar os docs no `CLAUDE.md` gerado pelo Boost
 
 ---
 
