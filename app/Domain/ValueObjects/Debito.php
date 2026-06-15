@@ -17,7 +17,7 @@ final class Debito
         BigDecimal $valorOriginal,
         \DateTimeImmutable $vencimento,
     ) {
-        $this->valorOriginal = $valorOriginal->toScale(2, RoundingMode::HALF_UP);
+        $this->valorOriginal = $valorOriginal->toScale(2, RoundingMode::HalfUp);
         $this->vencimento = $vencimento->setTime(0, 0, 0);
     }
 

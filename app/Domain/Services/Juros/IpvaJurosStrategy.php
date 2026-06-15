@@ -39,7 +39,7 @@ final class IpvaJurosStrategy implements JurosStrategyInterface
         $teto = $debito->valorOriginal->multipliedBy(self::TETO_PERCENTUAL);
 
         $juros = $jurosCalculado->isGreaterThan($teto) ? $teto : $jurosCalculado;
-        $juros = $juros->toScale(2, RoundingMode::HALF_UP);
+        $juros = $juros->toScale(2, RoundingMode::HalfUp);
 
         $valorAtualizado = $debito->valorOriginal->plus($juros);
 

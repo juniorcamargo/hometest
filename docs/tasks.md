@@ -7,6 +7,8 @@ próxima. Marque `[x]` ao concluir.
 Fases 1–4 cobrem 100% do P0 (resposta correta para `ABC1234` + os 3 códigos
 de erro). Fases 5–7 cobrem os itens "seria bacana" (P2). Fase 8 é entrega.
 
+É extremamente importante marcar os itens concluidos com `[x]` ao concluir, sempre que finalizar uma fase certifique que os itens foram marcados.
+
 ---
 
 ## Fase 0 — Setup do Projeto
@@ -25,21 +27,21 @@ de erro). Fases 5–7 cobrem os itens "seria bacana" (P2). Fase 8 é entrega.
 
 ## Fase 1 — Domain (Design 01)
 
-- [ ] `Placa` (VO) — `UT-PLACA-01/02/03`
-- [ ] `Debito` (VO, com `diasAtraso()` e normalização de `valorOriginal`/`vencimento`)
-- [ ] `DebitoAtualizado`, `ParcelaCartao`, `PixOpcao`, `CartaoCreditoOpcao`,
+- [x] `Placa` (VO) — `UT-PLACA-01/02/03`
+- [x] `Debito` (VO, com `diasAtraso()` e normalização de `valorOriginal`/`vencimento`)
+- [x] `DebitoAtualizado`, `ParcelaCartao`, `PixOpcao`, `CartaoCreditoOpcao`,
       `OpcaoPagamento`
-- [ ] `ResultadoConsulta` + `montar()` — `UT-RESULTADO-01`
-- [ ] Contracts: `DebtProviderInterface`, `JurosStrategyInterface`,
+- [x] `ResultadoConsulta` + `montar()` — `UT-RESULTADO-01`
+- [x] Contracts: `DebtProviderInterface`, `JurosStrategyInterface`,
       `JurosStrategyResolverInterface`, `PaymentSimulatorInterface`,
       `ReferenceDateProviderInterface`
-- [ ] Exceptions: `DomainException`, `InvalidPlateException`,
+- [x] Exceptions: `DomainException`, `InvalidPlateException`,
       `UnknownDebtTypeException`, `ProviderUnavailableException`,
       `AllProvidersUnavailableException`
-- [ ] `IpvaJurosStrategy` — `UT-IPVA-01`
-- [ ] `MultaJurosStrategy` — `UT-MULTA-01`
-- [ ] Caso de borda `dias_atraso <= 0` — `UT-EDGE-01`
-- [ ] `JurosStrategyResolver` (OCP) — `UT-RESOLVER-01/02`
+- [x] `IpvaJurosStrategy` — `UT-IPVA-01`
+- [x] `MultaJurosStrategy` — `UT-MULTA-01`
+- [x] Caso de borda `dias_atraso <= 0` — `UT-EDGE-01`
+- [x] `JurosStrategyResolver` (OCP) — `UT-RESOLVER-01/02`
 
 **Checkpoint:** `php artisan test --filter=Domain` — todos os 9 casos da
 Seção 6 de `01-domain-model.md` passando.
@@ -48,10 +50,10 @@ Seção 6 de `01-domain-model.md` passando.
 
 ## Fase 2 — Pagamento (Design 02)
 
-- [ ] `PixCalculator` — `UT-PIX-01`
-- [ ] `CartaoCreditoCalculator` — `UT-CARTAO-01/02/03/04`
-- [ ] `PagamentoSimulator` — `UT-SIM-01/02/03/04`
-- [ ] Teste "golden" — `UT-GOLDEN-01` (tabela completa do `02 §5`)
+- [x] `PixCalculator` — `UT-PIX-01`
+- [x] `CartaoCreditoCalculator` — `UT-CARTAO-01/02/03/04`
+- [x] `PagamentoSimulator` — `UT-SIM-01/02/03/04`
+- [x] Teste "golden" — `UT-GOLDEN-01` (tabela completa do `02 §5`)
 
 **Checkpoint:** `php artisan test --filter=Pagamento`.
 

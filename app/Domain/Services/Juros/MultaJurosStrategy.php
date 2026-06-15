@@ -34,7 +34,7 @@ final class MultaJurosStrategy implements JurosStrategyInterface
         $juros = $debito->valorOriginal
             ->multipliedBy(self::TAXA_DIARIA)
             ->multipliedBy($diasAtraso)
-            ->toScale(2, RoundingMode::HALF_UP);
+            ->toScale(2, RoundingMode::HalfUp);
 
         $valorAtualizado = $debito->valorOriginal->plus($juros);
 

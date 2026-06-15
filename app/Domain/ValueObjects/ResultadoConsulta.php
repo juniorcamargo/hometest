@@ -36,8 +36,8 @@ final class ResultadoConsulta
         return new self(
             placa: $placa,
             debitos: $debitos,
-            totalOriginal: $totalOriginal->toScale(2, RoundingMode::HALF_UP),
-            totalAtualizado: $totalAtualizado->toScale(2, RoundingMode::HALF_UP),
+            totalOriginal: $totalOriginal->toScale(2, RoundingMode::HalfUp),
+            totalAtualizado: $totalAtualizado->toScale(2, RoundingMode::HalfUp),
             opcoesPagamento: $opcoesPagamento,
         );
     }
