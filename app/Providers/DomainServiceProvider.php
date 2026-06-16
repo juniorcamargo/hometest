@@ -15,8 +15,9 @@ use App\Integrations\Providers\FixtureProviderAClient;
 use App\Integrations\Providers\FixtureProviderBClient;
 use App\Integrations\Providers\ProviderAJsonAdapter;
 use App\Integrations\Providers\ProviderBXmlAdapter;
-use App\Integrations\Providers\ProviderClientInterface;
+use App\Integrations\Resilience\CircuitBreakerProviderClientDecorator;
 use App\Integrations\Resilience\ProviderFallbackOrchestrator;
+use App\Integrations\Resilience\RetryingProviderClientDecorator;
 use Illuminate\Support\ServiceProvider;
 
 final class DomainServiceProvider extends ServiceProvider
@@ -33,18 +34,26 @@ final class DomainServiceProvider extends ServiceProvider
         $this->app->bind(PaymentSimulatorInterface::class, PagamentoSimulator::class);
         $this->app->bind(ReferenceDateProviderInterface::class, ConfigReferenceDateProvider::class);
 
-        $this->app->when(ProviderAJsonAdapter::class)
-            ->needs(ProviderClientInterface::class)
-            ->give(FixtureProviderAClient::class);
+        $this->app->singleton('cb_client_a', fn () =>
+            new CircuitBreakerProviderClientDecorator(
+                new RetryingProviderClientDecorator(new FixtureProviderAClient(), retries: 3, waitMs: 200),
+                threshold: 5,
+                resetAfterSeconds: 60,
+            )
+        );
 
-        $this->app->when(ProviderBXmlAdapter::class)
-            ->needs(ProviderClientInterface::class)
-            ->give(FixtureProviderBClient::class);
+        $this->app->singleton('cb_client_b', fn () =>
+            new CircuitBreakerProviderClientDecorator(
+                new RetryingProviderClientDecorator(new FixtureProviderBClient(), retries: 3, waitMs: 200),
+                threshold: 5,
+                resetAfterSeconds: 60,
+            )
+        );
 
         $this->app->bind(DebtProviderInterface::class, fn ($app) =>
             new ProviderFallbackOrchestrator([
-                $app->make(ProviderAJsonAdapter::class),
-                $app->make(ProviderBXmlAdapter::class),
+                new ProviderAJsonAdapter($app->make('cb_client_a')),
+                new ProviderBXmlAdapter($app->make('cb_client_b')),
             ])
         );
     }

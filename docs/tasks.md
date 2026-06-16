@@ -309,14 +309,14 @@ funcional** — é um bom momento para um commit/tag (`v0.1-mvp`).
 
 ## Fase 5 — Resiliência (Design 04, P2)
 
-- [ ] Escrever `docs/design/04-resilience-orchestration.md` (mesmo formato
+- [x] Escrever `docs/design/04-resilience-orchestration.md` (mesmo formato
       de `00`–`03`): Decorators `RetryingProviderClientDecorator` e
       `CircuitBreakerProviderClientDecorator` sobre `ProviderClientInterface`;
       mecanismo de simulação de falha (REQ-PROV-06/07).
-- [ ] Implementar conforme o doc acima.
-- [ ] `IT-01` (CB-02) — todos os provedores falhando →
+- [x] Implementar conforme o doc acima.
+- [x] `IT-01` (CB-02) — todos os provedores falhando →
       `503 {"error":"all_providers_unavailable"}`.
-- [ ] `IT-02` — Provedor A falha, Provedor B responde → resultado igual ao
+- [x] `IT-02` — Provedor A falha, Provedor B responde → resultado igual ao
       de A respondendo direto (fallback transparente).
 
 ---
