@@ -79,11 +79,11 @@ definido em `requirements.md` (REQ-API-01, REQ-OUT-01/02/03) e em
 `00-architecture.md` (§4 fluxo, §5.3 wiring, §5.4 mapeamento de erros, §5.6
 resolver). Os artefatos abaixo fecham o end-to-end do P0.
 
-### 4.1 `ConsultarDebitosVeiculoUseCase`
+### 4.1 `ConsultarDebitosVeiculoUseCase` [x]
 
 Implementar exatamente como em `00-architecture.md` §4.
 
-### 4.2 `ConfigReferenceDateProvider`
+### 4.2 `ConfigReferenceDateProvider` [x]
 
 ```php
 namespace App\Integrations\Clock;
@@ -106,7 +106,7 @@ return [
 ];
 ```
 
-### 4.3 `ProviderFallbackOrchestrator` (v1 — sem retry/circuit breaker ainda)
+### 4.3 `ProviderFallbackOrchestrator` (v1 — sem retry/circuit breaker ainda) [x]
 
 Implementa `DebtProviderInterface` via Composite: tenta cada provedor em
 ordem, acumula falhas, lança `AllProvidersUnavailableException` se todos
@@ -148,7 +148,7 @@ final class ProviderFallbackOrchestrator implements DebtProviderInterface
 }
 ```
 
-### 4.4 `DomainServiceProvider` — wiring completo
+### 4.4 `DomainServiceProvider` — wiring completo [x]
 
 ```php
 public function register(): void
@@ -176,7 +176,7 @@ public function register(): void
 }
 ```
 
-### 4.5 `ConsultaVeiculoRequest`
+### 4.5 `ConsultaVeiculoRequest` [x]
 
 ```php
 namespace App\Http\Requests;
@@ -199,7 +199,7 @@ final class ConsultaVeiculoRequest extends FormRequest
 }
 ```
 
-### 4.6 `ResultadoConsultaResource`
+### 4.6 `ResultadoConsultaResource` [x]
 
 ```php
 namespace App\Http\Resources;
@@ -248,7 +248,7 @@ final class ResultadoConsultaResource extends JsonResource
 }
 ```
 
-### 4.7 `ConsultaVeiculoController` + rota
+### 4.7 `ConsultaVeiculoController` + rota [x]
 
 ```php
 namespace App\Http\Controllers;
@@ -275,7 +275,7 @@ final class ConsultaVeiculoController
 Route::post('/veiculos/debitos', \App\Http\Controllers\ConsultaVeiculoController::class);
 ```
 
-### 4.8 Exception Handler (mapeamento — `00-architecture.md` §5.4)
+### 4.8 Exception Handler (mapeamento — `00-architecture.md` §5.4) [x]
 
 ```php
 // bootstrap/app.php
@@ -293,14 +293,14 @@ Route::post('/veiculos/debitos', \App\Http\Controllers\ConsultaVeiculoController
 
 ### 4.9 Testes de Feature (end-to-end)
 
-- [ ] `FT-01` — `POST /api/veiculos/debitos {"placa":"ABC1234"}` → `200` com
+- [x] `FT-01` — `POST /api/veiculos/debitos {"placa":"ABC1234"}` → `200` com
       o JSON **exatamente** igual ao do enunciado (placa, debitos, resumo,
       pagamentos.opcoes).
-- [ ] `FT-02` (CB-01) — placa sem débitos → `200`, `debitos:[]`, totais
+- [x] `FT-02` (CB-01) — placa sem débitos → `200`, `debitos:[]`, totais
       `"0.00"`, `opcoes` só `TOTAL`.
-- [ ] `FT-03` (CB-03) — forçar tipo desconhecido (fixture com `"type":"OUTROS"`)
+- [x] `FT-03` (CB-03) — forçar tipo desconhecido (fixture com `"type":"OUTROS"`)
       → `422 {"error":"unknown_debt_type","type":"OUTROS"}`.
-- [ ] `FT-04` (CB-05) — `{"placa":"AB1"}` → `400 {"error":"invalid_plate"}`.
+- [x] `FT-04` (CB-05) — `{"placa":"AB1"}` → `400 {"error":"invalid_plate"}`.
 
 **Checkpoint:** suíte completa verde. Neste ponto, **todo o P0 está
 funcional** — é um bom momento para um commit/tag (`v0.1-mvp`).
