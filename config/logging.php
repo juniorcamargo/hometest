@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'json'),
 
     /*
     |--------------------------------------------------------------------------
@@ -125,6 +125,16 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+
+        'json' => [
+            'driver'       => 'monolog',
+            'handler'      => StreamHandler::class,
+            'handler_with' => [
+                'stream' => storage_path('logs/laravel.log'),
+                'level'  => env('LOG_LEVEL', 'debug'),
+            ],
+            'formatter' => Monolog\Formatter\JsonFormatter::class,
         ],
 
     ],

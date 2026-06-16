@@ -323,10 +323,10 @@ funcional** — é um bom momento para um commit/tag (`v0.1-mvp`).
 
 ## Fase 6 — Observabilidade (Design 06, P2)
 
-- [ ] Escrever `docs/design/06-observability.md`: logs estruturados (JSON),
+- [x] Escrever `docs/design/06-observability.md`: logs estruturados (JSON),
       `Placa::mascarada()` em todo log que toque a placa, correlação por
       request ID.
-- [ ] Implementar (Monolog processor/canal customizado).
+- [x] Implementar (Monolog processor/canal customizado).
 
 ---
 

@@ -19,6 +19,7 @@ use App\Integrations\Resilience\CircuitBreakerProviderClientDecorator;
 use App\Integrations\Resilience\ProviderFallbackOrchestrator;
 use App\Integrations\Resilience\RetryingProviderClientDecorator;
 use Illuminate\Support\ServiceProvider;
+use Psr\Log\LoggerInterface;
 
 final class DomainServiceProvider extends ServiceProvider
 {
@@ -34,19 +35,21 @@ final class DomainServiceProvider extends ServiceProvider
         $this->app->bind(PaymentSimulatorInterface::class, PagamentoSimulator::class);
         $this->app->bind(ReferenceDateProviderInterface::class, ConfigReferenceDateProvider::class);
 
-        $this->app->singleton('cb_client_a', fn () =>
+        $this->app->singleton('cb_client_a', fn ($app) =>
             new CircuitBreakerProviderClientDecorator(
-                new RetryingProviderClientDecorator(new FixtureProviderAClient(), retries: 3, waitMs: 200),
+                new RetryingProviderClientDecorator(new FixtureProviderAClient(), retries: 3, waitMs: 200, logger: $app->make(LoggerInterface::class)),
                 threshold: 5,
                 resetAfterSeconds: 60,
+                logger: $app->make(LoggerInterface::class),
             )
         );
 
-        $this->app->singleton('cb_client_b', fn () =>
+        $this->app->singleton('cb_client_b', fn ($app) =>
             new CircuitBreakerProviderClientDecorator(
-                new RetryingProviderClientDecorator(new FixtureProviderBClient(), retries: 3, waitMs: 200),
+                new RetryingProviderClientDecorator(new FixtureProviderBClient(), retries: 3, waitMs: 200, logger: $app->make(LoggerInterface::class)),
                 threshold: 5,
                 resetAfterSeconds: 60,
+                logger: $app->make(LoggerInterface::class),
             )
         );
 
