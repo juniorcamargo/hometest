@@ -332,11 +332,11 @@ funcional** — é um bom momento para um commit/tag (`v0.1-mvp`).
 
 ## Fase 7 — Demais Itens "Seria Bacana" (P2)
 
-- [ ] REQ-INPUT-03 — limite de 1 MiB no corpo (`bodyParameter` /
+- [x] REQ-INPUT-03 — limite de 1 MiB no corpo (`bodyParameter` /
       `PHP_INT_MAX` via middleware) → `413 {"error":"payload_too_large"}`.
-- [ ] REQ-INPUT-04 — rejeitar campos além de `placa` →
+- [x] REQ-INPUT-04 — rejeitar campos além de `placa` →
       `422 {"error":"unexpected_fields","fields":[...]}`.
-- [ ] CB-06 — escrever no README a estratégia para provedores com dados
+- [x] CB-06 — escrever no README a estratégia para provedores com dados
       divergentes (requirements §3.2 / REQ-PROV-08) — apenas documentação.
 
 ---

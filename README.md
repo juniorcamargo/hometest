@@ -1,59 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Hometest — API de Consulta de Débitos Veiculares
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API REST em Laravel 12 para consulta de débitos de veículos com cálculo de
+juros e simulação de pagamento.
 
-## About Laravel
+> **Fase 8** (em andamento) completará este README com instruções de setup,
+> decisões técnicas, trade-offs e divergências do enunciado.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Estratégia para Provedores com Dados Divergentes (CB-06 / REQ-PROV-08)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Comportamento atual
 
-## Learning Laravel
+O `ProviderFallbackOrchestrator` usa o **primeiro provedor que responder com
+sucesso**. A ordem atual é Provider A → Provider B. Se o Provider A retornar
+dados, eles são usados integralmente; o Provider B nem é consultado. Se o
+Provider A falhar (timeout, 5xx, circuit breaker aberto), a consulta é
+repassada ao Provider B.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Isso significa que, em operação normal, apenas um provedor fornece a resposta
+— não há situação em que os dois retornam dados divergentes simultaneamente.
+O cenário de divergência só ocorre se os dois provedores forem consultados de
+forma paralela (o que não é o caso hoje).
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Por que não reconciliamos os dados entre provedores
 
-## Laravel Sponsors
+O enunciado (REQ-PROV-08 / §3.2) reconhece que provedores distintos podem
+retornar dados ligeiramente diferentes para a mesma placa, mas não especifica
+o comportamento esperado nesse caso. Adotar reconciliação sem requisito
+definido adicionaria complexidade sem garantia de corretude.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Estratégias possíveis para uma versão futura
 
-### Premium Partners
+| Estratégia | Descrição | Quando usar |
+|---|---|---|
+| **Provider primário fixo** (atual) | A tem precedência, B é fallback puro | Dados dos provedores são confiáveis individualmente e a prioridade é estabilidade |
+| **Reconciliação por campo** | Para cada débito, usar o valor mais conservador (maior valor, vencimento mais recente) | Contexto financeiro onde subestimar o débito é pior que superestimar |
+| **Interseção** | Retornar apenas débitos presentes nos dois provedores | Quando falsos positivos são mais problemáticos que falsos negativos |
+| **União com deduplicação** | Retornar todos os débitos de ambos, deduplicando por chave de negócio | Quando cada provedor pode ter débitos que o outro não tem |
+| **Divergência como erro** | Retornar `409 Conflict` se os dois diferirem acima de uma tolerância | Quando divergência indica problema de consistência que deve ser tratado upstream |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Decisão documentada
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+A estratégia atual ("primeiro que responde vence") é intencional e defensável
+para v1: é simples, previsível e sem risco de introduzir dados incorretos por
+mescla indevida. A ordem dos provedores (A antes de B) está hardcoded no
+`DomainServiceProvider` — uma melhoria futura seria torná-la configurável via
+`config/debitos.php`, permitindo ajuste operacional sem mudança de código.
