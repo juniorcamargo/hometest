@@ -343,13 +343,13 @@ funcional** — é um bom momento para um commit/tag (`v0.1-mvp`).
 
 ## Fase 8 — README e Entrega (REQ-DELIV-01/02)
 
-- [ ] Como rodar (setup, comandos, exemplo de `curl`).
-- [ ] Decisões técnicas / padrões utilizados — reaproveitar a tabela de
+- [x] Como rodar (setup, comandos, exemplo de `curl`).
+- [x] Decisões técnicas / padrões utilizados — reaproveitar a tabela de
       `00-architecture.md` §6.
-- [ ] Trade-offs — `00-architecture.md` §5.7 (interfaces de implementação
+- [x] Trade-offs — `00-architecture.md` §5.7 (interfaces de implementação
       única) e outros que surgirem.
-- [ ] Divergências do enunciado e justificativas — `requirements.md` §6.1
+- [x] Divergências do enunciado e justificativas — `requirements.md` §6.1
       (fail-fast em `unknown_debt_type`) e §6.3 (resposta sem débitos).
-- [ ] Estratégia para provedores divergentes (CB-06 / REQ-PROV-08).
-- [ ] Melhorias futuras (ex: provedores reais via HTTP, persistência,
+- [x] Estratégia para provedores divergentes (CB-06 / REQ-PROV-08).
+- [x] Melhorias futuras (ex: provedores reais via HTTP, persistência,
       observabilidade completa se Fase 6 não for feita).
